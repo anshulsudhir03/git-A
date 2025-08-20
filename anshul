@@ -1,1 +1,11 @@
-hi
+# 1. Remove the secret file
+git rm --cached .ssh/id_ed25519
+rm -f .ssh/id_ed25519  # make sure it's not in your repo folder anymore
+
+# 2. Rewrite history to remove it from all commits
+git filter-branch --force --index-filter \
+  "git rm --cached --ignore-unmatch .ssh/id_ed25519" \
+  --prune-empty --tag-name-filter cat -- --all
+
+# 3. Force push the cleaned history
+git push origin main --force
